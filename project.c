@@ -51,22 +51,52 @@ int main(){
         scanf("%d",&mode);
         switch (mode){
             case 1:
-                printf("성적을 수정할 학번을 입력해주세요.(반-번호)\n===>   ");
-                scanf("%d %d",&a,&b);
-                printf("%d반 %d번 학생의 성적을 입력해주세요.\n(국어-영어-수학-한국사-사회탐구-과학탐구)\n===>   ",a,b);
+                BACK1:
+                printf("성적을 수정할 학생의 반과 번호를 입력해주세요.\n===>   ");
+                while (scanf("%d %d",&a,&b) != 2) {
+                    int c;
+                    while ((c = getchar()) != '\n' && c != EOF);
+                    printf("숫자로 다시 입력해주세요.\n");
+                }
+                if((a <= 0 || a > 6) || b > student[a]){
+                    printf("반, 번호가 잘못되었습니다. 다시 입력해주세요.\n");
+                    goto BACK1;//8
+                }
+                printf("%d반 %d번 학생의 성적을 입력해주세요.\n국어-영어-수학-한국사-사회탐구-과학탐구 순서로 말해주면 된단다.\n===>   ",a,b);
                 int scr[7];
                 scr[6] = 0;
                 for(int i = 0;i < 6;++i){
-                    scanf("%d",scr + i);
+                    while (scanf("%d",scr + i) != 1) {
+                        int c;
+                        while ((c = getchar()) != '\n' && c != EOF);
+                        printf("숫자로 다시 입력해주세요.\n");
+                    }
                     scr[6] += scr[i];
                 }
                 update(a,b,scr);
                 break;
             case 2:
-                printf("석차를 조회할 학번을 입력해주세요.(반-번호)\n===>   ");
-                scanf("%d %d",&a,&b);
-                printf("조회하고 싶은 과목을 입력해주세요.\n1. 국어\n2. 영어\n3. 수학\n4. 한국사\n5. 사회탐구\n6. 과학탐구\n7. 전체성적\n===>   ");
-                scanf("%d",&s);
+                BACK2:
+                printf("석차를 조회할 사람이 있니? 반, 번호 순으로 말해주렴, 마리네뜨.\n===>   ");
+                while (scanf("%d %d",&a,&b) != 2) {
+                    int c;
+                    while ((c = getchar()) != '\n' && c != EOF);
+                    printf("숫자로 다시 입력해주세요.\n");
+                }
+                if((a <= 0 || a > 6) || b > student[a]){
+                    printf("반, 번호가 잘못되었습니다. 다시 입력해주세요.\n");
+                    goto BACK2;//7
+                }
+                printf("조회하고 싶은 과목을 입력해주려무나.\n1. 국어\n2. 영어\n3. 수학\n4. 한국사\n5. 사회탐구\n6. 과학탐구\n7. 전체성적\n===>   ");
+                while (scanf("%d",&s) != 1) {
+                    int c;
+                    while ((c = getchar()) != '\n' && c != EOF);
+                    printf("숫자로 다시 입력해주세요.\n");
+                }
+                if(s <= 0 || s > 7){
+                    printf("없는 과목입니다.\n");
+                    goto BACK2;//6
+                }
                 printf("%d반 %d번 학생의 학급내 %s 과목 석차는 %d입니다.\n",a,b,subject[s - 1],compute_rank(a,b,s - 1));
                 break;
             case 3:
@@ -77,10 +107,27 @@ int main(){
                 printf("%d반 %d번 학생의 학급내 %s 과목 등급은 %d등급 입니다.\n",a,b,subject[s - 1],compute_grade(a,b,s - 1));
                 break;
             case 4:
-                printf("성적 지표를 조회할 학급을 입력해주세요.\n===>   ");
-                scanf("%d",&a);
+                BACK4:
+                printf("성적 지표를 조회할 학급을 입력해주세요. \n===>   ");
+                while (scanf("%d",&a) != 1) {
+                    int c;
+                    while ((c = getchar()) != '\n' && c != EOF);
+                    printf("숫자로 다시 입력해주세요.\n");
+                }
+                if(a <= 0 || a > 6){
+                    printf("반이 잘못되었습니다. 다시 입력해주세요.\n");
+                    goto BACK4;//3
+                }
                 printf("조회하고 싶은 과목을 입력해주세요.\n1. 국어\n2. 영어\n3. 수학\n4. 한국사\n5. 사회탐구\n6. 과학탐구\n7. 전체성적\n===>   ");
-                scanf("%d",&s);
+                while (scanf("%d",&s) != 1) {
+                    int c;
+                    while ((c = getchar()) != '\n' && c != EOF);
+                    printf("숫자로 다시 입력해주세요.\n");
+                }
+                if(s <= 0 || s > 7){
+                    printf("없는 과목입니다. 다시 입력해주세요.\n");
+                    goto BACK4;//2
+                }
                 print_index(a,s - 1);
                 break;
             case 5:
@@ -95,13 +142,13 @@ int main(){
     return 0;
 }
 
-void update(int i,int j,int scr[7]){
+void update(int i,int j,int scr[7]){    // i반 j번 학생의 성적을 scr로 업데이트 작성자: 국도연
     for(int k=0;k<7;++k){
         score[i][j][k] = scr[k];
     }
 }
 
-void mge_sort(int s,int e,int arr[]){
+void mge_sort(int s,int e,int arr[]){    // s부터 e까지의 arr을 내림차순으로 정렬 직성자: 강지준
     if(s >= e) return;
     int m = (s + e) / 2;
     mge_sort(s,m,arr);
@@ -119,7 +166,7 @@ void mge_sort(int s,int e,int arr[]){
     free(tmp);
 }
 
-int compute_rank(int i,int j,int subj){
+int compute_rank(int i,int j,int subj){     // i반 j번 학생의subj과목 석차를 계산 작성자: 국도연
     //반,번호는 1원점 인덱싱(-1할 필요 없음!)
     int scr = score[i][j][subj];
     int tmp[40];
@@ -134,7 +181,7 @@ int compute_rank(int i,int j,int subj){
     }
 }
 
-void print_index(int i,int subj){
+void print_index(int i,int subj){     // i반의 subj과목 성적 지표를 출력 작성자: 강지준
     //Mean, grade cut, stdev
     double m = 0,sm = 0,stdev;
     int tmp[40];
@@ -155,7 +202,7 @@ void print_index(int i,int subj){
     printf("%d반 %s 과목 1등급 컷은 %d입니다.(-1등급은 1등급이 없음을 의미합니다.)\n",i,subject[subj],tmp[cut_idx]);
 }
 
-int compute_grade(int i,int j,int subj) {
+int compute_grade(int i,int j,int subj) {     // i반 j번 학생의 subj과목 등급을 계산 작성자: 김대현
     int rank = compute_rank(i,j,subj);
     int percentage = (double)rank / student[i] * 100;
     if (percentage <= 10) {
