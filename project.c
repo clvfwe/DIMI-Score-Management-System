@@ -20,7 +20,7 @@ int main(){
             while ((c = getchar()) != '\n' && c != EOF);
             printf("숫자로 다시 입력해주세요.\n");
         }
-        if(student[i] >= 50){
+        if(student[i] >= 40){
             printf("학생 수가 너무 많습니다. 다시 입력해주세요.\n");
             goto BACK;
         }
